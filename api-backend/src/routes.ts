@@ -14,7 +14,7 @@ export const routes: Routes = [
             {
                 path: '/user',
                 module: UserModule
-            }
+            },
             {
                 path: '/todo',
                 module: TodoModule,
