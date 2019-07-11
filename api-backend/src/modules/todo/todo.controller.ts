@@ -1,12 +1,10 @@
 import { Controller, Get, Post, Body, UseGuards, Delete, Patch, Param, HttpException } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-
 import { TodoService } from './todo.service';
 import { CreateTodoDto } from './dtos/createTodo.dto'
 import { updateTodoDto } from './dtos/updateTodo.dto';
 import { createParamDecorator } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import { Todo } from '../../interfaces/todo.interface';
 import { UserJwtDto } from '../user/dtos/userJwt.dto';
 import { TodoDto } from './dtos/todo.dto';
 
@@ -69,17 +67,16 @@ export class TodoController {
     }
   }
 
-
   @Patch(':id')
   @UseGuards(AuthGuard())
   async update(@Param() param: {id: string}, @Body() todo: updateTodoDto, @Token() user: UserJwtDto): Promise<TodoDto> {
     try {
-      return await this.todoService.update(param.id, todo, user).catch((e) => {
+        return await this.todoService.update(param.id, todo, user).catch((e) => {
         let error = JSON.parse(e.message);
         throw new HttpException(error.response, error.status);
       });
     } catch(e) {
       throw new HttpException(e.response, e.status);
     }
-
+  }
 }

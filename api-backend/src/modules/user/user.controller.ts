@@ -3,8 +3,6 @@ import { UserService } from './user.service';
 import { UserDto } from './dtos/user.dto'
 import { ClientProxy } from '@nestjs/microservices';
 import { AUTH_SERVICE } from './auth.constants';
-
-
 import { UserSafeDataDto } from './dtos/userSafeData.dto';
 
 @Controller('')

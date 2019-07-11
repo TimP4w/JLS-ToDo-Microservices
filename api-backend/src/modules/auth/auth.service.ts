@@ -37,10 +37,23 @@ export class AuthService {
           );
       }) 
     }
-    // Todo. Call Auth service!
-    async validateUser(payload: JwtPayload): Promise<string> {
-      const id = payload.id;
-      return id;
+    
+    async validateUser(payload: JwtPayload): Promise<JwtPayload> {
+      return new Promise(async (resolve, reject) => {
+        const pattern = { cmd: 'getUser' };
+        await this.client.send(pattern, "").subscribe(
+             user  => {
+               if(user) {
+                 resolve(payload);
+               } else {
+                reject(new HttpException("User not found", 401));
+              }
+             },
+             err => {
+                 reject(err);
+             }
+         );
+     }) 
     }
 
 /*

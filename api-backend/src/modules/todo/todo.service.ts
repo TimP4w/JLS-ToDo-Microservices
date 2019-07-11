@@ -1,18 +1,11 @@
-import { Injectable, HttpException, Inject } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { Todo } from '../../interfaces/todo.interface'
-import { User } from '../../interfaces/user.interface';
-
+import { Injectable, Inject } from '@nestjs/common';
 import { CreateTodoDto } from './dtos/createTodo.dto';
-import { InjectModel } from '@nestjs/mongoose';
 import { UserJwtDto } from '../user/dtos/userJwt.dto';
 import { updateTodoDto } from './dtos/updateTodo.dto';
 import { TodoDto } from './dtos/todo.dto';
-import { TodoAndUserDto } from './dtos/todoAndUser.dto';
 import { TODO_SERVICE } from './todo.constants';
 import { ClientProxy } from '@nestjs/microservices';
 import { GetAllTodosDto } from './dtos/getAllTodos.dto';
-import { GetTodoDto } from './dtos/getTodo.dto';
 
 
 @Injectable()
@@ -23,11 +16,9 @@ export class TodoService {
 
 
     async create(user: UserJwtDto, todo: CreateTodoDto): Promise<TodoDto> {
-
         const pattern = { cmd: 'createTodo' };
-        
+        todo.owner = user._id;
         let data = todo;
-        data.owner = user;
         return new Promise((resolve, reject) => {
             this.client.send<TodoDto>(pattern, data).subscribe(
                 newTodo  => {
@@ -43,7 +34,7 @@ export class TodoService {
     async getAll(user: UserJwtDto): Promise<TodoDto[]> {
         const pattern = { cmd: 'getAllTodos' };
         let data: GetAllTodosDto = {
-            owner : user
+            owner : user._id
         };
         return new Promise((resolve, reject) => {
             this.client.send<TodoDto[]>(pattern, data).subscribe(
@@ -60,8 +51,8 @@ export class TodoService {
 
     async getOne(id: string, user: UserJwtDto): Promise<TodoDto> {
         const pattern = { cmd: 'getTodo' };
-        let data: GetTodoDto = {
-            owner : user,
+        let data = {
+            owner: user._id,
             id: id
         };
         return new Promise((resolve, reject) => {
@@ -78,8 +69,8 @@ export class TodoService {
  
     async delete(id: string, user: UserJwtDto): Promise<TodoDto> {
         const pattern = { cmd: 'deleteTodo' };
-        let data: GetTodoDto = {
-            owner : user,
+        let data = {
+            owner: user._id,
             id: id
         };
         return new Promise((resolve, reject) => {
@@ -96,8 +87,8 @@ export class TodoService {
 
     async update(id: string, todo: updateTodoDto, user: UserJwtDto): Promise<TodoDto> {
         const pattern = { cmd: 'updateTodo' };
-        let data: GetTodoDto = {
-            owner : user,
+        let data = {
+            owner: user._id,
             id: id,
             task: {
                 title: todo.title,
