@@ -38,7 +38,6 @@ export class TodoService {
                 }
             );
         }) 
-
     }
 
     async getAll(user: UserJwtDto): Promise<TodoDto[]> {
@@ -59,48 +58,63 @@ export class TodoService {
         }) 
     } 
 
-    async getOne(id: string, user: UserJwtDto): Promise<TodoDto[]> {
+    async getOne(id: string, user: UserJwtDto): Promise<TodoDto> {
         const pattern = { cmd: 'getTodo' };
         let data: GetTodoDto = {
             owner : user,
-            todo: id
+            id: id
         };
         return new Promise((resolve, reject) => {
-            this.client.send<TodoDto[]>(pattern, data).subscribe(
+            this.client.send<TodoDto>(pattern, data).subscribe(
                 todo  => {
                     resolve(todo);
                 },
                 err => {
-                    console.error(err);
                     reject(err);
                 }
             );
         }) 
     } 
- /*   
+ 
     async delete(id: string, user: UserJwtDto): Promise<TodoDto> {
-        const task = await this.todoModel.findById(id).populate({path: 'user', select: 'username'}).exec();
-        if (!task) {
-            throw new HttpException('The task was not found', 404);
-        } 
-        if(task.user.username !== user.username) {
-            throw new HttpException('You don\'t have the access to this resource', 401);
-        }
-        return task.remove();
+        const pattern = { cmd: 'deleteTodo' };
+        let data: GetTodoDto = {
+            owner : user,
+            id: id
+        };
+        return new Promise((resolve, reject) => {
+            this.client.send<TodoDto>(pattern, data).subscribe(
+                todo  => {
+                    resolve(todo);
+                },
+                err => {
+                    reject(err);
+                }
+            );
+        }) 
     }
 
     async update(id: string, todo: updateTodoDto, user: UserJwtDto): Promise<TodoDto> {
-        const task = await this.todoModel.findById(id).populate({path: 'user', select: 'username'}).exec();
-        if (!task) {
-            throw new HttpException('The task was not found', 404);
-        } 
-        if(task.user.username !== user.username) {
-            throw new HttpException('You don\'t have the access to this resource', 401);
-        }
-        task.title = todo.title;
-        task.date = todo.date;
-        task.done = todo.done;
-        return task.save();
+        const pattern = { cmd: 'updateTodo' };
+        let data: GetTodoDto = {
+            owner : user,
+            id: id,
+            task: {
+                title: todo.title,
+                date: todo.date,
+                done: todo.done
+            } 
+        };
+        return new Promise((resolve, reject) => {
+            this.client.send<TodoDto>(pattern, data).subscribe(
+                todo  => {
+                    resolve(todo);
+                },
+                err => {
+                    reject(err);
+                }
+            );
+        }) 
     } 
- */
+ 
 }

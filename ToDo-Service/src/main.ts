@@ -10,7 +10,7 @@ async function bootstrap() {
       port: 3002
     }
   });
-  app.listen(() => console.log('Todo Service is listening...'))
+  app.listen(() => ('Todo Service is listening...'))
 };
 
 bootstrap();

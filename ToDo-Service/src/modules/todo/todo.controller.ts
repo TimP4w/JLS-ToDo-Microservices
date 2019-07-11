@@ -54,7 +54,7 @@ export class TodoController {
   @MessagePattern({cmd: 'updateTodo'})
   update(todo: updateTodoDto): Promise<TodoDto> {
     try {
-      return this.todoService.update(todo.id, todo.data, todo.owner);
+      return this.todoService.update(todo.id, todo.task, todo.owner);
     } catch(e) {
       throw new RpcException(e.response);
     }

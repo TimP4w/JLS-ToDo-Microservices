@@ -43,13 +43,14 @@ export class TodoController {
     }
   }
 
-/*
   @Get(':id')
   @UseGuards(AuthGuard())
-  findOne(@Param() id: {id: string}, @Usr() user: UserJwtDto): Promise<TodoDto> {
+  async findOne(@Param() param: {id: string}, @Token() user: UserJwtDto): Promise<TodoDto> {
     try {
-      return this.todoService.getOne(id.id, user);
-
+      return await this.todoService.getOne(param.id, user).catch((e) => {
+        let error = JSON.parse(e.message);
+        throw new HttpException(error.response, error.status);
+      });
     } catch(e) {
       throw new HttpException(e.response, e.status);
     }
@@ -57,22 +58,28 @@ export class TodoController {
 
   @Delete(':id')
   @UseGuards(AuthGuard())
-  delete(@Param() id: {id: string}, @Usr() user: UserJwtDto): Promise<TodoDto> {
+  async delete(@Param() param: {id: string}, @Token() user: UserJwtDto): Promise<TodoDto> {
     try {
-      return this.todoService.delete(id.id, user);
+      return await this.todoService.delete(param.id, user).catch((e) => {
+        let error = JSON.parse(e.message);
+        throw new HttpException(error.response, error.status);
+      });
     } catch(e) {
       throw new HttpException(e.response, e.status);
     }
   }
-  
+
+
   @Patch(':id')
   @UseGuards(AuthGuard())
-  update(@Param() id: {id: string}, @Body() todo: updateTodoDto, @Usr() user: UserJwtDto): Promise<TodoDto> {
+  async update(@Param() param: {id: string}, @Body() todo: updateTodoDto, @Token() user: UserJwtDto): Promise<TodoDto> {
     try {
-      return this.todoService.update(id.id, todo, user);
+      return await this.todoService.update(param.id, todo, user).catch((e) => {
+        let error = JSON.parse(e.message);
+        throw new HttpException(error.response, error.status);
+      });
     } catch(e) {
       throw new HttpException(e.response, e.status);
     }
-  } 
- */
+
 }
